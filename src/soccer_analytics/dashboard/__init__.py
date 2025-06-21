@@ -1,0 +1,1 @@
+"""Dashboard module for European Soccer Analytics."""
