@@ -541,3 +541,21 @@ def create_goals_timeline_chart(league_id: int, season_year: Optional[int] = Non
     except Exception as e:
         logger.error(f"Error creating goals timeline: {e}")
         return go.Figure()
+
+
+def get_teams_by_league(league_id: int) -> List[Team]:
+    """Get all teams in a specific league."""
+    with get_db_session() as session:
+        teams = session.query(Team).filter(
+            Team.league_id == league_id
+        ).order_by(Team.name).all()
+        return teams
+
+
+def get_matches_by_league(league_id: int) -> List[Match]:
+    """Get all matches in a specific league."""
+    with get_db_session() as session:
+        matches = session.query(Match).filter(
+            Match.competition_id == league_id
+        ).all()
+        return matches

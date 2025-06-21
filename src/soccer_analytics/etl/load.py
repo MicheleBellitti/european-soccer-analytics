@@ -463,29 +463,31 @@ class DataLoader:
         return created_count, updated_count
 
 
-def get_league_by_external_id(external_id: int) -> Optional[League]:
+def get_league_by_external_id(external_id: int) -> Optional[int]:
     """
-    Get league by external API ID.
+    Get league internal ID by external API ID.
     
     Args:
         external_id: External API ID
         
     Returns:
-        League object if found, None otherwise
+        League internal ID if found, None otherwise
     """
     with get_db_session() as session:
-        return session.query(League).filter(League.external_id == external_id).first()
+        league = session.query(League).filter(League.external_id == external_id).first()
+        return league.id if league else None
 
 
-def get_team_by_external_id(external_id: int) -> Optional[Team]:
+def get_team_by_external_id(external_id: int) -> Optional[int]:
     """
-    Get team by external API ID.
+    Get team internal ID by external API ID.
     
     Args:
         external_id: External API ID
         
     Returns:
-        Team object if found, None otherwise
+        Team internal ID if found, None otherwise
     """
     with get_db_session() as session:
-        return session.query(Team).filter(Team.external_id == external_id).first() 
+        team = session.query(Team).filter(Team.external_id == external_id).first()
+        return team.id if team else None 

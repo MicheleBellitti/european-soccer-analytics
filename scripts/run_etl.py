@@ -43,10 +43,10 @@ def fetch_and_load_teams(fetcher: FootballDataFetcher, loader: DataLoader, compe
             
             # Get the league from database to get its internal ID
             from soccer_analytics.etl.load import get_league_by_external_id
-            league = get_league_by_external_id(comp_id)
+            league_id = get_league_by_external_id(comp_id)
             
-            if league:
-                created, updated = loader.load_teams(teams, league.id)
+            if league_id:
+                created, updated = loader.load_teams(teams, league_id)
                 total_created += created
                 total_updated += updated
                 logger.info(f"Teams loaded for competition {comp_id}: {created} created, {updated} updated")

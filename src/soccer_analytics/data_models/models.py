@@ -33,7 +33,10 @@ class League(Base):
     matches = relationship("Match", back_populates="competition")
     
     def __repr__(self) -> str:
-        return f"<League(name='{self.name}', area='{self.area_name}')>"
+        try:
+            return f"<League(id={self.id}, external_id={self.external_id})>"
+        except:
+            return f"<League(external_id={getattr(self, 'external_id', 'Unknown')})>"
 
 
 class Team(Base):
@@ -68,7 +71,10 @@ class Team(Base):
     team_stats = relationship("TeamStats", back_populates="team")
     
     def __repr__(self) -> str:
-        return f"<Team(name='{self.name}', league='{self.league.name if self.league else 'Unknown'}')>"
+        try:
+            return f"<Team(id={self.id}, external_id={self.external_id})>"
+        except:
+            return f"<Team(external_id={getattr(self, 'external_id', 'Unknown')})>"
 
 
 class Player(Base):
@@ -94,7 +100,10 @@ class Player(Base):
     player_stats = relationship("PlayerStats", back_populates="player")
     
     def __repr__(self) -> str:
-        return f"<Player(name='{self.name}', position='{self.position}', team='{self.team.name if self.team else 'No Team'}')>"
+        try:
+            return f"<Player(id={self.id}, external_id={self.external_id})>"
+        except:
+            return f"<Player(external_id={getattr(self, 'external_id', 'Unknown')})>"
 
 
 class Match(Base):
@@ -138,7 +147,10 @@ class Match(Base):
     player_stats = relationship("PlayerStats", back_populates="match")
     
     def __repr__(self) -> str:
-        return f"<Match({self.home_team.name if self.home_team else 'Unknown'} vs {self.away_team.name if self.away_team else 'Unknown'}, {self.utc_date})>"
+        try:
+            return f"<Match(id={self.id}, external_id={self.external_id})>"
+        except:
+            return f"<Match(external_id={getattr(self, 'external_id', 'Unknown')})>"
 
 
 class PlayerStats(Base):
@@ -177,7 +189,10 @@ class PlayerStats(Base):
     match = relationship("Match", back_populates="player_stats")
     
     def __repr__(self) -> str:
-        return f"<PlayerStats(player='{self.player.name if self.player else 'Unknown'}', goals={self.goals}, assists={self.assists})>"
+        try:
+            return f"<PlayerStats(id={self.id}, player_id={self.player_id}, match_id={self.match_id})>"
+        except:
+            return f"<PlayerStats(id={getattr(self, 'id', 'Unknown')})>"
 
 
 class TeamStats(Base):
@@ -211,4 +226,7 @@ class TeamStats(Base):
     league = relationship("League")
     
     def __repr__(self) -> str:
-        return f"<TeamStats(team='{self.team.name if self.team else 'Unknown'}', position={self.position}, points={self.points})>"
+        try:
+            return f"<TeamStats(id={self.id}, team_id={self.team_id}, league_id={self.league_id})>"
+        except:
+            return f"<TeamStats(id={getattr(self, 'id', 'Unknown')})>"

@@ -27,13 +27,16 @@ WORKDIR /app
 # Copy poetry files
 COPY pyproject.toml poetry.lock* ./
 
-# Configure poetry and install dependencies
+# Configure poetry and install dependencies only (not the local package yet)
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev --no-interaction --no-ansi \
+    && poetry install --only main --no-interaction --no-ansi --no-root \
     && rm -rf $POETRY_CACHE_DIR
 
 # Copy application code
 COPY . .
+
+# Install the local package
+RUN poetry install --only main --no-interaction --no-ansi
 
 # Copy and make wait script executable
 COPY scripts/wait-for-postgres.sh /wait-for-postgres.sh

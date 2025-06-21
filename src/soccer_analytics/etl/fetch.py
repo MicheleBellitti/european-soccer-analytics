@@ -129,51 +129,32 @@ class FootballDataFetcher:
         
         return players
     
-    def fetch_competition_matches(
-        self, 
-        competition_id: int, 
-        season: Optional[str] = None,
-        matchday: Optional[int] = None,
-        status: Optional[str] = None,
-        date_from: Optional[str] = None,
-        date_to: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    def fetch_competition_matches(self, competition_id: int, season: Optional[int] = None) -> List[Dict]:
         """
-        Fetch matches for a specific competition.
+        Fetch all matches for a specific competition.
         
         Args:
-            competition_id: Competition ID
-            season: Season year (e.g., "2023")
-            matchday: Specific matchday/round
-            status: Match status (SCHEDULED, LIVE, IN_PLAY, FINISHED, etc.)
-            date_from: Start date (YYYY-MM-DD)
-            date_to: End date (YYYY-MM-DD)
+            competition_id: ID of the competition
+            season: Year when season starts (e.g., 2024 for 2024-25 season)
             
         Returns:
-            List of match data
+            List of match dictionaries
         """
-        logger.info(f"Fetching matches for competition {competition_id}")
-        
-        endpoint = f"/competitions/{competition_id}/matches"
-        params = {}
-        
-        if season:
-            params["season"] = season
-        if matchday:
-            params["matchday"] = matchday
-        if status:
-            params["status"] = status
-        if date_from:
-            params["dateFrom"] = date_from
-        if date_to:
-            params["dateTo"] = date_to
+        try:
+            url = f"{self.base_url}/competitions/{competition_id}/matches"
+            params = {}
+            if season:
+                params['season'] = season
             
-        data = self._make_request(endpoint, params)
-        
-        matches = data.get("matches", [])
-        logger.info(f"Fetched {len(matches)} matches")
-        
-        return matches
+            response = self._make_request(url, params=params)
+            matches = response.get("matches", [])
+            
+            logger.info(f"Fetched {len(matches)} matches")
+            return matches
+            
+        except Exception as e:
+            logger.error(f"Error fetching matches: {e}")
+            return []
     
     def fetch_competition_standings(self, competition_id: int, season: Optional[str] = None) -> Dict[str, Any]:
         """
